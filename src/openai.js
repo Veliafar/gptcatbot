@@ -25,9 +25,11 @@ class OpenAI {
                 model: 'gpt-3.5-turbo',
                 messages,
             })
-            return response.data.choices[0].message
+            return response?.data?.choices[0]?.message ? response.data.choices[0].message : 'ошибка :('
         } catch (e) {
-            console.log(`Error while GPT chat`, e.message)
+            const error = `Error while GPT chat ${e.message}`
+            console.log(error)
+            return error
         }
     }
 
@@ -40,7 +42,9 @@ class OpenAI {
             removeFile(filePath)
             return response.data.text
         } catch (e) {
-            console.log(`Error while voice to text`, e.message)
+            const error = `Error while voice to text ${e.message}`
+            console.log(error)
+            return error
         }
     }
 }

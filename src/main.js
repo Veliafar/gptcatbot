@@ -37,14 +37,18 @@ bot.on(message('text'), async ctx => {
         })
         const response = await openai.chat(ctx.session.messages)
 
+        const answer = response?.content ? response?.content : response.toString()
+
         ctx.session.messages.push({
             role: openai.roles.ASSISTANT,
-            content: response.content
+            content: answer
         })
-        await ctx.reply(response.content)
+        await ctx.reply(answer)
 
     } catch (e) {
-        console.log(`Error while text message`, e.message)
+        const error = `Error while text message ${e.message}`
+        console.log(error)
+        await ctx.reply(error)
     }
 })
 
@@ -68,14 +72,18 @@ bot.on(message('voice'), async ctx => {
         })
         const response = await openai.chat(ctx.session.messages)
 
+        const answer = response?.content ? response?.content : response.toString()
+
         ctx.session.messages.push({
             role: openai.roles.ASSISTANT,
-            content: response.content
+            content: answer
         })
-        await ctx.reply(response.content)
+        await ctx.reply(answer)
 
     } catch (e) {
-        console.log(`Error while voice message`, e.message)
+        const error = `Error while voice message ${e.message}`
+        console.log(error)
+        await ctx.reply(error)
     }
 })
 
