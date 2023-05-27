@@ -7,7 +7,7 @@ import {openai} from './openai.js'
 
 console.log(config.get('TEST_ENV'))
 
-const INITIAL_SESSION = {
+let INITIAL_SESSION = {
     messages: [],
 }
 const bot = new Telegraf(config.get('TELEGRAM_TOKEN'))
@@ -16,11 +16,19 @@ bot.use(session())
 
 
 bot.command('start', async (ctx) => {
+    INITIAL_SESSION = {
+
+    messages: [],
+
+}
     ctx.session = INITIAL_SESSION
     await ctx.reply('Жду вашего голосового или текстового сообщения')
 })
 
 bot.command('new', async ctx => {
+    INITIAL_SESSION = {
+    messages: [],
+}
     ctx.session = INITIAL_SESSION
     await ctx.reply('Жду вашего голосового или текстового сообщения')
 })
