@@ -1,15 +1,36 @@
 import {openai} from "./openai.js";
+import {dirname} from 'path'
+import {fileURLToPath} from "url";
+import {ttsConverter} from "./tts.js"
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export let INITIAL_SESSION = {
     messages: [],
 }
 
+export let isVoiceOn = false;
+
 export async function initCommand(ctx) {
     INITIAL_SESSION = {
         messages: [],
     }
-    ctx.session = { ...INITIAL_SESSION }
+    ctx.session = {...INITIAL_SESSION}
     await ctx.reply('Жду вашего голосового или текстового сообщения')
+}
+
+export async function voiceOn(ctx) {
+    isVoiceOn = true;
+    await ctx.reply('Ответ аудиосообщением - включен!')
+}
+
+export async function voiceOff(ctx) {
+    isVoiceOn = false;
+    await ctx.reply('Ответ аудиосообщением - выключен!')
+}
+
+export async function checkVoiceOn(ctx) {
+    await ctx.reply(`Ответ аудиосообщением - ${isVoiceOn ? 'влючен!' : 'выключен!'}`)
 }
 
 
@@ -29,7 +50,16 @@ export async function processTextToChat(ctx, content) {
             content: answer
         })
 
-        await ctx.reply(answer)
+        if (!isVoiceOn) {
+            await ctx.reply(answer)
+        } else {
+            const source = await ttsConverter.textToSpeech(answer)
+
+            await ctx.sendAudio(
+                { source },
+                { title: 'Ответ от ассистента', performer: 'ChatGPT' }
+            )
+        }
 
     } catch (e) {
         const error = `Error while text message ${e.message}`

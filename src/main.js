@@ -1,10 +1,10 @@
-import {Telegraf, session} from 'telegraf';
+import {session, Telegraf} from 'telegraf';
 import {message} from "telegraf/filters";
 import {code} from 'telegraf/format'
 import config from 'config';
 import {ogg} from './ogg.js'
 import {openai} from './openai.js'
-import {initCommand, processTextToChat} from "./logic.js";
+import {checkVoiceOn, initCommand, processTextToChat, voiceOff, voiceOn} from "./logic.js";
 import {removeFile} from "./utils.js";
 
 console.log(config.get('TEST_ENV'))
@@ -19,6 +19,13 @@ bot.use(session())
 bot.command('new', initCommand)
 
 bot.command('start', initCommand)
+
+bot.command('checkVoice', checkVoiceOn)
+bot.command('cv', checkVoiceOn)
+bot.command('voiceOn', voiceOn)
+bot.command('von', voiceOn)
+bot.command('voiceOff', voiceOff)
+bot.command('voff', voiceOff)
 
 
 bot.on(message('voice'), async ctx => {
