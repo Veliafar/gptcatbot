@@ -45,12 +45,10 @@ bot.on(message('voice'), async ctx => {
 
 
     try {
-        const userId = String(ctx.message.from.id)
-        // if (userId !== '131082004' && userId !== '298691789') {
-        //     throw new Error(noAllowError)
-        // }
+
 
         await ctx.reply(code('Сообщение принял. Жду ответ от сервера'))
+        const userId = String(ctx.message.from.id)
         const link = await ctx.telegram.getFileLink(ctx.message.voice.file_id)
         const oggPath = await ogg.create(link.href, userId)
         const mp3Path = await ogg.toMp3(oggPath, userId)
@@ -72,16 +70,7 @@ bot.on(message('voice'), async ctx => {
 bot.on(message('text'), async ctx => {
     ctx.session ??= INITIAL_SESSION
 
-
-
-
     try {
-
-        //const userId = String(ctx.message.from.id)
-        // if (userId !== '131082004' && userId !== '298691789') {
-        //     throw new Error(noAllowError)
-        // }
-
         await ctx.reply(code(`Сообщение принял. Жду ответ от сервера`))
         await processTextToChat(ctx, ctx.message.text);
     } catch (e) {
