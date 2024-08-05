@@ -39,6 +39,7 @@ bot.on(message('voice'), async ctx => {
 
     ctx.session ??= INITIAL_SESSION
 
+    const userId = String(ctx.message.from.id)
     if (!allowIDs.includes(userId)) {
         try {
             await ctx.reply(code(noAllowError))
@@ -73,8 +74,8 @@ bot.on(message('voice'), async ctx => {
 
 bot.on(message('text'), async ctx => {
     ctx.session ??= INITIAL_SESSION
-    const userId = String(ctx.message.from.id)
 
+    const userId = String(ctx.message.from.id)
     if (!allowIDs.includes(userId)) {
         try {
             await ctx.reply(code(noAllowError))
