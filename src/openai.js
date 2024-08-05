@@ -1,10 +1,9 @@
-import OpenAI from "openai";
+import {Configuration, OpenAIApi} from 'openai'
 import config from 'config';
 import {createReadStream} from 'fs'
 import {removeFile} from "./utils.js";
 
-
-class OpenAILocal {
+class OpenAI {
     openai = null;
 
     roles = {
@@ -14,20 +13,19 @@ class OpenAILocal {
     }
 
     constructor(apiKey) {
-
-        this.openai = new OpenAI({
-            apiKey
+        const configuration = new Configuration({
+            apiKey,
         });
-
+        this.openai = new OpenAIApi(configuration);
     }
 
     async chat(messages) {
         try {
-            const response = await this.openai.chat.completions.create({
+            const response = await this.openai.createChatCompletion({
                 model: 'gpt-4o',
                 messages,
             })
-            return response?.choices[0]?.message ? response?.choices[0]?.message : 'ошибка :('
+            return response?.data?.choices[0]?.message ? response.data.choices[0].message : 'ошибка :('
         } catch (e) {
             const error = `Error while GPT chat ${e.message}`
             console.log(error)
@@ -37,14 +35,11 @@ class OpenAILocal {
 
     async transcription(filePath) {
         try {
-            const response = await this.openai.audio.transcriptions.create(
-                {
-                    model: "whisper-1",
-                    file: createReadStream(filePath),
-                    response_format: "text",
-                }
+            const response = await this.openai.createTranscription(
+                createReadStream(filePath),
+                'whisper-1'
             )
-            await removeFile(filePath)
+            removeFile(filePath)
             return response.data.text
         } catch (e) {
             const error = `Error while voice to text ${e.message}`
@@ -54,4 +49,4 @@ class OpenAILocal {
     }
 }
 
-export const openai = new OpenAILocal(config.get('OPENAI_KEY'))
+export const openai = new OpenAI(config.get('OPENAI_KEY'))
