@@ -6,7 +6,7 @@ import {ogg} from './ogg.js'
 import {openai} from './openai.js'
 import {checkVoiceOn, initCommand, processTextToChat, voiceOff, voiceOn} from "./logic.js";
 import {removeFile} from "./utils.js";
-import {checkAccess} from './access.js'
+import {checkAccess, noAllowError} from './access.js'
 
 console.log(config.get('TEST_ENV'))
 
@@ -56,7 +56,12 @@ bot.on(message('voice'), async ctx => {
         await processTextToChat(ctx, text);
 
     } catch (e) {
-        const error = `Error while voice message ${e.message}`
+        let error
+        if (e.message === noAllowError) {
+            error = `${e.message}`
+        } else {
+            error = `Error while voice message ${e.message}`
+        }
         console.log(error)
         await ctx.reply(error)
     }
@@ -73,7 +78,12 @@ bot.on(message('text'), async ctx => {
         await ctx.reply(code(`Сообщение принял. Жду ответ от сервера`))
         await processTextToChat(ctx, ctx.message.text);
     } catch (e) {
-        const error = `Error while text message ${e.message}`
+        let error
+        if (e.message === noAllowError) {
+            error = `${e.message}`
+        } else {
+            error = `Error while text message ${e.message}`
+        }
         console.log(error)
         await ctx.reply(error)
     }

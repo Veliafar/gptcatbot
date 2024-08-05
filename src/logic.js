@@ -24,7 +24,7 @@ export async function initCommand(ctx) {
         await ctx.reply('Жду вашего голосового или текстового сообщения')
 
     } catch (e) {
-        const error = `Error message ${e.message}`
+        const error = `${e.message}`
         console.log(error)
         await ctx.reply(error)
     }
