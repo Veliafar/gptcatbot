@@ -57,10 +57,10 @@ bot.on(message('text'), async (update, context) => {
 
 
     try {
-        const user = update.message.from_user
+        const userID = update.message.from.id;
 
 
-        await context.reply(code(`Ваш id ${user.id}. Сообщение принял. Жду ответ от сервера`))
+        await context.reply(code(`Ваш id ${userID}. Сообщение принял. Жду ответ от сервера`))
         await processTextToChat(context, context.message.text);
     } catch (e) {
         const error = `Error while text message ${e.message}`
