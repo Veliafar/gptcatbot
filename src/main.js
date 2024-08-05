@@ -33,25 +33,30 @@ bot.command('voff', voiceOff)
 
 }
 
+function checkAccess(ctx) {
+
+}
 
 bot.on(message('voice'), async ctx => {
     //await ctx.reply(JSON.stringify(ctx.message, null, 2))
 
     ctx.session ??= INITIAL_SESSION
 
-    const userId = String(ctx.message.from.id)
-    if (!allowIDs.includes(userId)) {
-        try {
-            await ctx.reply(code(noAllowError))
-        } catch (e) {
-            const error = `${noAllowError}`
-            console.log(error)
-            await ctx.reply(error)
-        }
-        return
-    }
+
 
     try {
+        const userId = String(ctx.message.from.id)
+        if (!allowIDs.includes(userId)) {
+            try {
+                await ctx.reply(code(noAllowError))
+            } catch (e) {
+                const error = `${noAllowError}`
+                console.log(error)
+                await ctx.reply(error)
+            }
+            return
+        }
+
         await ctx.reply(code('Сообщение принял. Жду ответ от сервера'))
         const link = await ctx.telegram.getFileLink(ctx.message.voice.file_id)
         const userId = String(ctx.message.from.id)
@@ -75,20 +80,23 @@ bot.on(message('voice'), async ctx => {
 bot.on(message('text'), async ctx => {
     ctx.session ??= INITIAL_SESSION
 
-    const userId = String(ctx.message.from.id)
-    if (!allowIDs.includes(userId)) {
-        try {
-            await ctx.reply(code(noAllowError))
-        } catch (e) {
-            const error = `${noAllowError}`
-            console.log(error)
-            await ctx.reply(error)
-        }
-        return
-    }
+
 
 
     try {
+
+        const userId = String(ctx.message.from.id)
+        if (!allowIDs.includes(userId)) {
+            try {
+                await ctx.reply(code(noAllowError))
+            } catch (e) {
+                const error = `${noAllowError}`
+                console.log(error)
+                await ctx.reply(error)
+            }
+            return
+        }
+
         await ctx.reply(code(`Сообщение принял. Жду ответ от сервера`))
         await processTextToChat(ctx, ctx.message.text);
     } catch (e) {
