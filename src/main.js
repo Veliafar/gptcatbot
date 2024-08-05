@@ -6,6 +6,7 @@ import {ogg} from './ogg.js'
 import {openai} from './openai.js'
 import {checkVoiceOn, initCommand, processTextToChat, voiceOff, voiceOn} from "./logic.js";
 import {removeFile} from "./utils.js";
+import {checkAccess} from './access.js'
 
 console.log(config.get('TEST_ENV'))
 
@@ -13,6 +14,8 @@ let INITIAL_SESSION = {
     messages: [],
 }
 const bot = new Telegraf(config.get('TELEGRAM_TOKEN'))
+
+
 
 bot.use(session())
 
@@ -37,9 +40,10 @@ bot.on(message('voice'), async ctx => {
 
     try {
 
+        const userId = String(ctx.message.from.id)
+        checkAccess(userId)
 
         await ctx.reply(code('Сообщение принял. Жду ответ от сервера'))
-        const userId = String(ctx.message.from.id)
         const link = await ctx.telegram.getFileLink(ctx.message.voice.file_id)
         const oggPath = await ogg.create(link.href, userId)
         const mp3Path = await ogg.toMp3(oggPath, userId)
@@ -62,6 +66,10 @@ bot.on(message('text'), async ctx => {
     ctx.session ??= INITIAL_SESSION
 
     try {
+
+        const userId = String(ctx.message.from.id)
+        checkAccess(userId)
+
         await ctx.reply(code(`Сообщение принял. Жду ответ от сервера`))
         await processTextToChat(ctx, ctx.message.text);
     } catch (e) {

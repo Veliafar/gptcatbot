@@ -2,7 +2,7 @@ import {openai} from "./openai.js";
 import {dirname} from 'path'
 import {fileURLToPath} from "url";
 import {ttsConverter} from "./tts.js"
-
+import {checkAccess} from './access.js'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export let INITIAL_SESSION = {
@@ -15,6 +15,17 @@ export async function initCommand(ctx) {
     INITIAL_SESSION = {
         messages: [],
     }
+    const userId = String(ctx.message.from.id)
+
+    try {
+        checkAccess(userId)
+    } catch (e) {
+        const error = `Error message ${e.message}`
+        console.log(error)
+        await ctx.reply(error)
+    }
+
+
     ctx.session = {...INITIAL_SESSION}
     await ctx.reply('Жду вашего голосового или текстового сообщения')
 }
@@ -56,8 +67,8 @@ export async function processTextToChat(ctx, content) {
             const source = await ttsConverter.textToSpeech(answer)
 
             await ctx.sendAudio(
-                { source },
-                { title: 'Ответ от ассистента', performer: 'ChatGPT' }
+                {source},
+                {title: 'Ответ от ассистента', performer: 'ChatGPT'}
             )
         }
 
