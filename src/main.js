@@ -55,7 +55,7 @@ bot.on(message('voice'), async ctx => {
 bot.on(message('text'), async ctx => {
     ctx.session ??= INITIAL_SESSION
     const userId = String(ctx.message.from.id)
-    const userName = String(ctx.message.from.name)
+    const userName = String(ctx.message.from.username)
 
     try {
         await ctx.reply(code(`Ваш id ${userName}. Сообщение принял. Жду ответ от сервера`))
