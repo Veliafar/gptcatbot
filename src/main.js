@@ -52,17 +52,20 @@ bot.on(message('voice'), async ctx => {
     }
 })
 
-bot.on(message('text'), async ctx => {
-    ctx.session ??= INITIAL_SESSION
+bot.on(message('text'), async (update, context) => {
+    context.session ??= INITIAL_SESSION
 
 
     try {
-        await ctx.reply(code(`Ваш id ${ctx?.user.name}. Сообщение принял. Жду ответ от сервера`))
-        await processTextToChat(ctx, ctx.message.text);
+        const user = update.message.from_user
+
+
+        await context.reply(code(`Ваш id ${user.id}. Сообщение принял. Жду ответ от сервера`))
+        await processTextToChat(context, context.message.text);
     } catch (e) {
         const error = `Error while text message ${e.message}`
         console.log(error)
-        await ctx.reply(error)
+        await context.reply(error)
     }
 })
 
