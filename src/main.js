@@ -14,6 +14,9 @@ let INITIAL_SESSION = {
 }
 const bot = new Telegraf(config.get('TELEGRAM_TOKEN'))
 
+const allowIDs = ['131082004', '298691789']
+const noAllowError = `У вас нет доступа`
+
 bot.use(session())
 
 bot.command('new', initCommand)
@@ -28,9 +31,25 @@ bot.command('voiceOff', voiceOff)
 bot.command('voff', voiceOff)
 
 
+}
+
+
 bot.on(message('voice'), async ctx => {
     //await ctx.reply(JSON.stringify(ctx.message, null, 2))
+
     ctx.session ??= INITIAL_SESSION
+
+    if (!allowIDs.includes(userId)) {
+        try {
+            await ctx.reply(code(noAllowError))
+        } catch (e) {
+            const error = `${noAllowError}`
+            console.log(error)
+            await ctx.reply(error)
+        }
+        return
+    }
+
     try {
         await ctx.reply(code('Сообщение принял. Жду ответ от сервера'))
         const link = await ctx.telegram.getFileLink(ctx.message.voice.file_id)
@@ -55,10 +74,21 @@ bot.on(message('voice'), async ctx => {
 bot.on(message('text'), async ctx => {
     ctx.session ??= INITIAL_SESSION
     const userId = String(ctx.message.from.id)
-    const userName = String(ctx.message.from.username)
+
+    if (!allowIDs.includes(userId)) {
+        try {
+            await ctx.reply(code(noAllowError))
+        } catch (e) {
+            const error = `${noAllowError}`
+            console.log(error)
+            await ctx.reply(error)
+        }
+        return
+    }
+
 
     try {
-        await ctx.reply(code(`Ваш id ${userName}  ${userId}. Сообщение принял. Жду ответ от сервера`))
+        await ctx.reply(code(`Сообщение принял. Жду ответ от сервера`))
         await processTextToChat(ctx, ctx.message.text);
     } catch (e) {
         const error = `Error while text message ${e.message}`
