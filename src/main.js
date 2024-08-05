@@ -55,9 +55,10 @@ bot.on(message('voice'), async ctx => {
 bot.on(message('text'), async ctx => {
     ctx.session ??= INITIAL_SESSION
     const userId = String(ctx.message.from.id)
+    const userName = String(ctx.message.from.name)
 
     try {
-        await ctx.reply(code(`Ваш id ${userId}. Сообщение принял. Жду ответ от сервера`))
+        await ctx.reply(code(`Ваш id ${userName}. Сообщение принял. Жду ответ от сервера`))
         await processTextToChat(ctx, ctx.message.text);
     } catch (e) {
         const error = `Error while text message ${e.message}`
