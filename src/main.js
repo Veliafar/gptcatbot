@@ -46,15 +46,9 @@ bot.on(message('voice'), async ctx => {
 
     try {
         const userId = String(ctx.message.from.id)
+
         if (!allowIDs.includes(userId)) {
-            try {
-                await ctx.reply(code(noAllowError))
-            } catch (e) {
-                const error = `${noAllowError}`
-                console.log(error)
-                await ctx.reply(error)
-            }
-            return
+            throw new Error(noAllowError)
         }
 
         await ctx.reply(code('Сообщение принял. Жду ответ от сервера'))
@@ -86,14 +80,7 @@ bot.on(message('text'), async ctx => {
 
         const userId = String(ctx.message.from.id)
         if (!allowIDs.includes(userId)) {
-            try {
-                await ctx.reply(code(noAllowError))
-            } catch (e) {
-                const error = `${noAllowError}`
-                console.log(error)
-                await ctx.reply(error)
-            }
-            return
+            throw new Error(noAllowError)
         }
 
         await ctx.reply(code(`Сообщение принял. Жду ответ от сервера`))
