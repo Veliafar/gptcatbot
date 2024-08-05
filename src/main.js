@@ -46,9 +46,9 @@ bot.on(message('voice'), async ctx => {
 
     try {
         const userId = String(ctx.message.from.id)
-        if (userId !== '131082004' && userId !== '298691789') {
-            throw new Error(noAllowError)
-        }
+        // if (userId !== '131082004' && userId !== '298691789') {
+        //     throw new Error(noAllowError)
+        // }
 
         await ctx.reply(code('Сообщение принял. Жду ответ от сервера'))
         const link = await ctx.telegram.getFileLink(ctx.message.voice.file_id)
@@ -77,10 +77,10 @@ bot.on(message('text'), async ctx => {
 
     try {
 
-        const userId = String(ctx.message.from.id)
-        if (userId !== '131082004' && userId !== '298691789') {
-            throw new Error(noAllowError)
-        }
+        //const userId = String(ctx.message.from.id)
+        // if (userId !== '131082004' && userId !== '298691789') {
+        //     throw new Error(noAllowError)
+        // }
 
         await ctx.reply(code(`Сообщение принял. Жду ответ от сервера`))
         await processTextToChat(ctx, ctx.message.text);
