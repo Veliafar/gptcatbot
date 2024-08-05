@@ -46,8 +46,7 @@ bot.on(message('voice'), async ctx => {
 
     try {
         const userId = String(ctx.message.from.id)
-
-        if (!allowIDs.includes(userId)) {
+        if (userId !== '131082004' && userId !== '298691789') {
             throw new Error(noAllowError)
         }
 
@@ -79,7 +78,7 @@ bot.on(message('text'), async ctx => {
     try {
 
         const userId = String(ctx.message.from.id)
-        if (!allowIDs.includes(userId)) {
+        if (userId !== '131082004' && userId !== '298691789') {
             throw new Error(noAllowError)
         }
 
