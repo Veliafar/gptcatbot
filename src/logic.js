@@ -19,15 +19,15 @@ export async function initCommand(ctx) {
 
     try {
         checkAccess(userId)
+
+        ctx.session = {...INITIAL_SESSION}
+        await ctx.reply('Жду вашего голосового или текстового сообщения')
+
     } catch (e) {
         const error = `Error message ${e.message}`
         console.log(error)
         await ctx.reply(error)
     }
-
-
-    ctx.session = {...INITIAL_SESSION}
-    await ctx.reply('Жду вашего голосового или текстового сообщения')
 }
 
 export async function voiceOn(ctx) {
