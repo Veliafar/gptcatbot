@@ -14,9 +14,6 @@ let INITIAL_SESSION = {
 }
 const bot = new Telegraf(config.get('TELEGRAM_TOKEN'))
 
-const allowIDs = ['131082004', '298691789']
-const noAllowError = `У вас нет доступа`
-
 bot.use(session())
 
 bot.command('new', initCommand)
@@ -30,12 +27,6 @@ bot.command('von', voiceOn)
 bot.command('voiceOff', voiceOff)
 bot.command('voff', voiceOff)
 
-
-}
-
-function checkAccess(ctx) {
-
-}
 
 bot.on(message('voice'), async ctx => {
     //await ctx.reply(JSON.stringify(ctx.message, null, 2))
